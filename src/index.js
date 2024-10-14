@@ -1,3 +1,3 @@
-import { welcome } from "./modules/welcome/welcome.js";
+import { welcome } from "./modules/operation/welcome.js";
 
 welcome();

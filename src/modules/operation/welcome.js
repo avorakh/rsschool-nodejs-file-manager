@@ -1,10 +1,6 @@
+import { exitApp } from "./exit.js";
 
 const defaultUserName = 'User';
-
-const argNamePrefix = /^--/;
-const empty_str = '';
-const prefix = '';
-
 
 const parseUsername = () => {
     let args = process.argv.slice(2);
@@ -28,6 +24,12 @@ const welcome = () => {
     let username = parseUsername()
 
     console.log(`Welcome to the File Manager, ${username}!`);
+    
+    let exitOnCtrlC =exitApp(username);
+    // Handle Ctrl+C
+    process.on('SIGINT', exitOnCtrlC);
+    
+    return username;
 }
 
 export { welcome };
