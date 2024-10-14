@@ -4,7 +4,7 @@ import { system_info } from "./os_handler.js";
 import { handleHashCommand } from "./hash_handler.mjs";
 import { handleNwdCommand } from "./nwd_handler.js";
 import { handleFileCommand } from "./file_ops_handler.js";
-import { handleZipCommand } from "./zip_ops_handler.js"
+import { handleZipCommand } from "./zip_ops_handler.mjs"
 
 
 const handleCommand = async (command, username) => {
