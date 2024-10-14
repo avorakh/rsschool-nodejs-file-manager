@@ -3,10 +3,11 @@ import { open } from 'node:fs/promises';
 import { isExistingPath } from "./../utils/file_utils.js";
 
 
-const calculateHash = async (filePath) => {
+const calculateHash =  async (filePath) => {
     let isExistingFile = await isExistingPath(filePath);
     if (!isExistingFile) {
         console.log(`ERROR - A file not found: '${filePath}'`);
+        return;
     }
 
     let fd = await open(filePath);
@@ -14,18 +15,21 @@ const calculateHash = async (filePath) => {
 
     let hash = createHash('sha256');
 
-    stream.on('error', function (error) {
+     return new Promise((resolve, reject) => {
+        stream.on('error', (error) => {
+            console.log(`ERROR - Failure during Hash calculation: ${error.message}`);
+            reject(error);
+        });
 
-        console.log(`ERROR - Failure during Hash calculation: ${error.message}`);
-    })
+        stream.on('data', (chunk) => {
+            hash.update(chunk);
+        });
 
-    stream.on('data', (chunk) => {
-        hash.update(chunk);
-    });
-
-    stream.on('end', () => {
-        let fileHash = hash.digest('hex');
-        console.log(`Hash of file "${filePath}": ${fileHash}`);
+        stream.on('end', () => {
+            let fileHash = hash.digest('hex');
+            console.log(`Hash of file "${filePath}": ${fileHash}`);
+            resolve(fileHash);
+        });
     });
 };
 

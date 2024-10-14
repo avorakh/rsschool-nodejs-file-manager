@@ -18,12 +18,12 @@ let currentDirectory = homedir();
 
 init_output(currentDirectory);
 
-rl.on('line', (input) => {
+rl.on('line', async (input) => {
     const command = input.trim();
 
-    currentDirectory = handleCommand(command, username, currentDirectory);
+    currentDirectory =  await handleCommand(command, username, currentDirectory);
     init_output(currentDirectory);
-}).on('close', () => {
+}).on('close', async () => {
     exitApp(username);
 });
 

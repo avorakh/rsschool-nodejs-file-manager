@@ -3,7 +3,7 @@ import { parseCommand } from "./../utils/command_utils.js";
 import { system_info } from "./os_handler.js";
 import { hash_info } from "./hash_handler.js";
 
-const handleCommand = (command, username, currentDirPath) => {
+const handleCommand =  async (command, username, currentDirPath) => {
 
   let parsedCommand = parseCommand(command);
   // console.log(parsedCommand)
@@ -17,7 +17,7 @@ const handleCommand = (command, username, currentDirPath) => {
       break;
 
     case 'hash':
-      hash_info(parsedCommand.args);
+      await hash_info(parsedCommand.args);
       break;
 
     default:
