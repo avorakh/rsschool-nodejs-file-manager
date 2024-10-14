@@ -1,6 +1,8 @@
 import { exitApp } from "./../operation/exit.js";
 import { parseCommand } from "./../utils/command_utils.js";
 import { system_info } from "./os_handler.js";
+import { hash_info } from "./hash_handler.js";
+
 const handleCommand = (command, username, currentDirPath) => {
 
   let parsedCommand = parseCommand(command);
@@ -9,9 +11,15 @@ const handleCommand = (command, username, currentDirPath) => {
     case '.exit':
       exitApp(username);
       break;
+
     case 'os':
       system_info(parsedCommand.args);
       break;
+
+    case 'hash':
+      hash_info(parsedCommand.args);
+      break;
+
     default:
       console.log('Invalid input');
   }
