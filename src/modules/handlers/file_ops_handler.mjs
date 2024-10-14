@@ -1,19 +1,17 @@
-import { createReadStream, createWriteStream } from 'node:fs';
-import { open, rename, unlink } from 'node:fs/promises';
-import { resolve, dirname, join, basename } from 'node:path';
-import { isExistingPath } from "../utils/file_utils.mjs";
+import { removeFile, renameFile, addEmptyFile, copyFile, readFile, moveFile } from '../file_ops/file_ops.mjs';
 
 
-const add = async (fileName) => {
-    try {
-        let filePath = resolve(process.cwd(), fileName);
-
-        let fileHandle = await open(filePath, 'w');
-        await fileHandle.close();
-    } catch (error) {
-        console.error(`ERROR - Failure during creating file: ${error.message}`);
+const add = async (args) => {
+    if (args.length === 0) {
+        console.log("the 'add' command must contains at least one argument.");
+        return;
     }
+
+    let filePathToCreate = args[0];
+
+    await addEmptyFile(filePathToCreate);
 };
+
 
 const cp = async (args) => {
     if (args.length !== 2) {
@@ -23,68 +21,20 @@ const cp = async (args) => {
 
     let [sourcePath, destinationDir] = args;
 
-    let resolvedSourcePath = resolve(sourcePath);
-    let fileName = basename(resolvedSourcePath);
-    let resolvedDestinationPath = join(resolve(destinationDir), fileName);
-
-    // Create readable and writable streams
-    let readableStream = createReadStream(resolvedSourcePath);
-    let writableStream = createWriteStream(resolvedDestinationPath);
-
-
-
-    return new Promise((resolve) => {
-        // Pipe the readable stream into the writable stream
-        readableStream.pipe(writableStream);
-
-        // Handle events for success and errors
-        readableStream.on('error', (error) => {
-            console.error(`Error reading from source file: ${error.message}`);
-            resolve();
-        });
-
-        writableStream.on('error', (error) => {
-            console.error(`Error writing to destination file: ${error.message}`);
-            resolve();
-        });
-
-        writableStream.on('finish', () => {
-            console.log(`File copied successfully to: ${resolvedDestinationPath}`);
-            resolve();
-        });
-    });
+    await copyFile(sourcePath, destinationDir)
 };
 
-const cat = async (filePath) => {
-    let isExistingFile = await isExistingPath(filePath);
-    if (!isExistingFile) {
-        console.log(`ERROR - A path not found: '${filePath}'`);
+
+const cat = async (args) => {
+    if (args.length === 0) {
+        console.log("the 'cat' command must contains at least one argument.");
         return;
     }
+    let filePath = args[0];
 
-    let inputFileStream = createReadStream(resolve(filePath), { encoding: 'utf-8' });
-    return new Promise((resolve) => {
-
-
-        inputFileStream.on('error', (error) => {
-            console.log(`ERROR - Failure during file reading: ${error.message}`);
-            resolve();
-        });
-
-        inputFileStream.on('readable', () => {
-            let chunk;
-
-            while ((chunk = inputFileStream.read()) !== null) {
-                process.stdout.write(chunk.toString());
-            }
-        });
-        inputFileStream.on("end", () => {
-            console.log("\n");
-            resolve();
-        });
-    });
+    await readFile(filePath)
+        ;
 };
-
 
 
 const mv = async (args) => {
@@ -94,51 +44,8 @@ const mv = async (args) => {
     }
 
     let [sourcePath, destinationDir] = args;
-
-    let resolvedSourcePath = resolve(sourcePath);
-    let fileName = basename(resolvedSourcePath);
-    let resolvedDestinationPath = join(resolve(destinationDir), fileName);
-
-    try {
-
-        let readableStream = createReadStream(resolvedSourcePath);
-        let writableStream = createWriteStream(resolvedDestinationPath);
-
-
-        return new Promise((resolve) => {
-            readableStream.pipe(writableStream);
-
-
-            writableStream.on('finish', async () => {
-                console.log(`File copied successfully to: ${resolvedDestinationPath}`);
-                try {
-                    // Delete the original file after copying
-                    await unlink(resolvedSourcePath);
-                    console.log(`File moved successfully. Deleted original file: ${resolvedSourcePath}`);
-                } catch (error) {
-                    console.error(`Error deleting original file: ${error.message}`);
-                }
-                resolve();
-            });
-
-
-            readableStream.on('error', (error) => {
-                console.error(`Error reading from source file: ${error.message}`);
-                resolve();
-            });
-
-
-            writableStream.on('error', (error) => {
-                console.error(`Error writing to destination file: ${error.message}`);
-                resolve();
-            });
-        });
-
-    } catch (error) {
-        console.error(`Error during the move operation: ${error.message}`);
-    }
+    await moveFile(sourcePath, destinationDir);
 };
-
 
 
 const rn = async (args) => {
@@ -148,55 +55,33 @@ const rn = async (args) => {
     }
 
     let [filePath, newFileName] = args;
-    let currentDir = dirname(resolve(filePath));
-    let newFilePath = join(currentDir, newFileName);
-
-    try {
-        await rename(filePath, newFilePath);
-
-    } catch (error) {
-        console.error(`ERROR - Failure during renaming file: ${error.message}`);
-    }
+    await renameFile(filePath, newFileName);
 };
 
 
-const rm = async (filePath) => {
-    try {
-        let resolvedPath = resolve(filePath);
-        await unlink(resolvedPath);
-    } catch (error) {
-        console.error(`ERROR - Failure during deleting file: ${error.message}`);
+const rm = async (args) => {
+    if (args.length === 0) {
+        console.log("the 'rm' command must contains at least one argument.");
+        return;
     }
+    let filePathToRemove = args[0];
+
+    await removeFile(filePathToRemove);
 };
+
 
 const handleFileCommand = async (cmd) => {
     switch (cmd.command) {
         case 'cat':
-            if (cmd.args.length === 0) {
-                console.log("the 'cat' command must contains at least one argument.");
-                return;
-            }
-            let filePath = cmd.args[0];
-
-            await cat(filePath);
+            await cat(cmd.args);
             break;
 
         case "add":
-            if (cmd.args.length === 0) {
-                console.log("the 'add' command must contains at least one argument.");
-                return;
-            }
-            let filePathToCreate = cmd.args[0];
-            await add(filePathToCreate);
+            await add(cmd.args);
             break;
 
         case "rm":
-            if (cmd.args.length === 0) {
-                console.log("the 'add' command must contains at least one argument.");
-                return;
-            }
-            let filePathToRemove = cmd.args[0];
-            await rm(filePathToRemove);
+            await rm(cmd.args);
             break;
 
         case 'rn':
