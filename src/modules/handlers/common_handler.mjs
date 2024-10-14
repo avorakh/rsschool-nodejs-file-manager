@@ -1,9 +1,9 @@
-import { exitApp } from "./../operation/exit.js";
+import { exitApp } from "../operation/exit.mjs";
 import { parseCommand } from "../utils/command_utils.mjs";
-import { system_info } from "./os_handler.js";
+import { system_info } from "./os_handler.mjs";
 import { handleHashCommand } from "./hash_handler.mjs";
-import { handleNwdCommand } from "./nwd_handler.js";
-import { handleFileCommand } from "./file_ops_handler.js";
+import { handleNwdCommand } from "./nwd_handler.mjs";
+import { handleFileCommand } from "./file_ops_handler.mjs";
 import { handleZipCommand } from "./zip_ops_handler.mjs"
 
 
