@@ -1,43 +1,5 @@
 import { replaceArgPrefix } from "./../utils/command_utils.js";
-import { EOL, cpus, homedir, userInfo } from 'node:os';
-
-
-const eol = () => {
-    console.log(`The default system End-Of-Line character is: ${JSON.stringify(EOL)}`);
-};
-
-
-const cpu_info = () => {
-
-    let cpus_data = cpus();
-    let totalCPUs = cpus_data.length;
-
-    console.log(`Total number of CPUs: ${totalCPUs}`);
-
-    cpus_data.forEach((cpu, index) => {
-        let model = cpu.model;
-        let speedGHz = (cpu.speed / 1000).toFixed(2);
-        console.log(`CPU ${index + 1}: Model: ${model}, Speed: ${speedGHz} GHz`);
-    });
-};
-
-
-const homedir_info = () => {
-    console.log(`Your home directory is '${homedir}'`);
-};
-
-
-const username_info = () => {
-
-    let username = userInfo().username;
-
-    console.log(`Your system user name is '${username}'`);
-};
-
-
-const arch_info = () => {
-    console.log(`CPU architecture: ${process.arch}`);
-};
+import {eol, cpu_info, homedir_info, username_info, arch_info} from "../os/os.mjs";
 
 
 const system_info = (args) => {
