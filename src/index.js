@@ -1,5 +1,3 @@
+import { welcome } from "./modules/welcome/welcome.js";
 
-const defaultUserName = 'User';
-const username = defaultUserName
-
-console.log(`Welcome to the File Manager, ${username}!`);
+welcome();
