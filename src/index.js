@@ -5,24 +5,23 @@ import { cli_reader } from "./modules/utils/readline.js";
 import { handleCommand } from "./modules/handlers/common_handler.js";
 import { homedir } from 'node:os';
 
-
 const rl = cli_reader;
 const username = welcome();
 
-const init_output = (dirPath) => {
-    printDirectoryPath(dirPath);
+const init_output = () => {
+    let currentDir = process.cwd();
+    printDirectoryPath(currentDir);
     rl.prompt();
 };
 
-let currentDirectory = homedir();
-
-init_output(currentDirectory);
+process.chdir(homedir());
+init_output();
 
 rl.on('line', async (input) => {
     const command = input.trim();
 
-    currentDirectory =  await handleCommand(command, username, currentDirectory);
-    init_output(currentDirectory);
+    await handleCommand(command, username);
+    init_output();
 }).on('close', async () => {
     exitApp(username);
 });
