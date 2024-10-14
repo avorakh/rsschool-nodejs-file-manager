@@ -1,7 +1,7 @@
 import { createReadStream, createWriteStream } from 'node:fs';
 import { open, rename, unlink } from 'node:fs/promises';
 import { resolve, dirname, join, basename } from 'node:path';
-import { isExistingPath } from "./../utils/file_utils.js";
+import { isExistingPath } from "../utils/file_utils.mjs";
 
 
 const add = async (fileName) => {

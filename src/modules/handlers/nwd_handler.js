@@ -1,6 +1,6 @@
 import { dirname, resolve, isAbsolute } from 'node:path';
 import { stat, readdir } from 'node:fs/promises';
-import { isExistingPath } from "./../utils/file_utils.js";
+import { isExistingPath } from "../utils/file_utils.mjs";
 
 
 const up = () => {

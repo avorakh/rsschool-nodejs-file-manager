@@ -1,12 +1,12 @@
 import { createHash } from 'node:crypto';
 import { open } from 'node:fs/promises';
-import { isExistingPath } from "./../utils/file_utils.js";
+import { isExistingFile } from "../utils/file_utils.mjs";
 
 
 const calculateHash =  async (filePath) => {
-    let isExistingFile = await isExistingPath(filePath);
-    if (!isExistingFile) {
-        console.log(`ERROR - A file not found: '${filePath}'`);
+    let isExistingFilePath = await isExistingFile(filePath);
+    if (!isExistingFilePath) {
+        console.log(`ERROR - A file path is invalid or not found: '${filePath}'`);
         return;
     }
 
