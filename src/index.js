@@ -1,7 +1,7 @@
 import { welcome } from "./modules/operation/welcome.js";
 import { exitApp } from "./modules/operation/exit.js";
 import { printDirectoryPath } from "./modules/operation/pwd.js";
-import { cli_reader } from "./modules/utils/readline.js";
+import { cli_reader } from "./modules/utils/readline.mjs";
 import { handleCommand } from "./modules/handlers/common_handler.js";
 import { homedir } from 'node:os';
 

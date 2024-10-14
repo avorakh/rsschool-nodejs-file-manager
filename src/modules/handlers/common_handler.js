@@ -1,5 +1,5 @@
 import { exitApp } from "./../operation/exit.js";
-import { parseCommand } from "./../utils/command_utils.js";
+import { parseCommand } from "../utils/command_utils.mjs";
 import { system_info } from "./os_handler.js";
 import { handleHashCommand } from "./hash_handler.mjs";
 import { handleNwdCommand } from "./nwd_handler.js";

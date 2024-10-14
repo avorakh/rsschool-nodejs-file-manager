@@ -1,4 +1,4 @@
-import { replaceArgPrefix } from "./../utils/command_utils.js";
+import { replaceArgPrefix } from "../utils/command_utils.mjs";
 import {eol, cpu_info, homedir_info, username_info, arch_info} from "../os/os.mjs";
 
 
