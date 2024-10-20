@@ -2,6 +2,7 @@
   "name": "rsschool-nodejs-file-manager",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "engines": {
     "node": ">=22.9.0"
   },
